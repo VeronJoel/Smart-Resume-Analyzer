@@ -1,0 +1,87 @@
+{
+    "machine learning": [
+        "machine learning",
+        "ml",
+        "machine-learning"
+    ],
+
+    "deep learning": [
+        "deep learning",
+        "dl"
+    ],
+
+    "natural language processing": [
+        "natural language processing",
+        "nlp"
+    ],
+
+    "computer vision": [
+        "computer vision",
+        "cv"
+    ],
+
+    "pytorch": [
+        "pytorch",
+        "torch"
+    ],
+
+    "tensorflow": [
+        "tensorflow",
+        "tf"
+    ],
+
+    "postgresql": [
+        "postgresql",
+        "postgres"
+    ],
+
+    "javascript": [
+        "javascript",
+        "js"
+    ],
+
+    "typescript": [
+        "typescript",
+        "ts"
+    ],
+
+    "scikit-learn": [
+        "scikit-learn",
+        "scikit learn",
+        "sklearn"
+    ],
+
+    "node.js": [
+        "node.js",
+        "node js",
+        "node"
+    ],
+
+    "react": [
+        "react",
+        "react.js",
+        "reactjs"
+    ],
+
+    "artificial intelligence": [
+        "artificial intelligence",
+        "ai"
+    ],
+
+    "structured query language": [
+        "structured query language",
+        "sql"
+    ],
+
+    "object oriented programming": [
+        "object oriented programming",
+        "object-oriented programming",
+        "oop"
+    ],
+
+    "application programming interface": [
+        "application programming interface",
+        "api",
+        "apis"
+    ]
+}

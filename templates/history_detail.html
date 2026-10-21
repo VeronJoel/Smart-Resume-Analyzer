@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Analysis Details</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f7fb;
+            color: #1f2937;
+        }
+
+        .navbar {
+            background: #111827;
+
+            color: white;
+
+            padding: 18px 8%;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+        }
+
+        .brand {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-link {
+            color: white;
+
+            text-decoration: none;
+
+            background: #374151;
+
+            padding: 9px 15px;
+
+            border-radius: 7px;
+        }
+
+        .container {
+            width: 90%;
+
+            max-width: 1000px;
+
+            margin: 40px auto 70px;
+        }
+
+        .header {
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            color: #6b7280;
+        }
+
+        .section {
+            background: white;
+
+            padding: 28px;
+
+            border-radius: 14px;
+
+            margin-bottom: 25px;
+
+            box-shadow:
+                0 5px 20px
+                rgba(0, 0, 0, 0.05);
+        }
+
+        .section h2 {
+            margin-bottom: 20px;
+        }
+
+        /* ================================================
+           INFO
+        ================================================ */
+
+        .info-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 15px;
+        }
+
+        .info-box {
+            background: #f9fafb;
+
+            padding: 15px;
+
+            border-radius: 9px;
+        }
+
+        .label {
+            font-size: 13px;
+
+            color: #6b7280;
+
+            margin-bottom: 5px;
+        }
+
+        .value {
+            font-weight: bold;
+
+            word-break: break-word;
+        }
+
+        /* ================================================
+           SCORES
+        ================================================ */
+
+        .score-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 20px;
+        }
+
+        .score-card {
+            text-align: center;
+
+            background: #f9fafb;
+
+            padding: 25px;
+
+            border-radius: 12px;
+        }
+
+        .score-card h3 {
+            color: #6b7280;
+
+            font-size: 14px;
+
+            margin-bottom: 10px;
+        }
+
+        .score {
+            font-size: 38px;
+
+            font-weight: bold;
+
+            color: #2563eb;
+        }
+
+        .ats {
+            color: #166534;
+        }
+
+        .job {
+            color: #92400e;
+        }
+
+        /* ================================================
+           SKILLS
+        ================================================ */
+
+        .skills {
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 9px;
+        }
+
+        .skill {
+            padding: 8px 12px;
+
+            border-radius: 20px;
+
+            font-size: 14px;
+
+            background: #dcfce7;
+
+            color: #166534;
+        }
+
+        .missing {
+            background: #fee2e2;
+
+            color: #991b1b;
+        }
+
+        .empty {
+            color: #6b7280;
+        }
+
+        /* ================================================
+           FEEDBACK
+        ================================================ */
+
+        .feedback-list {
+            padding-left: 22px;
+        }
+
+        .feedback-list li {
+            margin-bottom: 12px;
+
+            line-height: 1.5;
+        }
+
+        /* ================================================
+           BUTTONS
+        ================================================ */
+
+        .buttons {
+            display: flex;
+
+            gap: 12px;
+
+            margin-top: 30px;
+        }
+
+        .button {
+            display: inline-block;
+
+            padding: 12px 20px;
+
+            border-radius: 8px;
+
+            text-decoration: none;
+
+            font-weight: bold;
+        }
+
+        .primary {
+            background: #2563eb;
+
+            color: white;
+        }
+
+        .secondary {
+            background: #374151;
+
+            color: white;
+        }
+
+        @media (max-width: 750px) {
+
+            .score-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =================================================
+         NAVBAR
+    ================================================= -->
+
+    <nav class="navbar">
+
+        <div class="brand">
+            Smart Resume Analyzer
+        </div>
+
+        <div class="nav-links">
+
+            <a
+                href="{{ url_for('index') }}"
+                class="nav-link"
+            >
+                New Analysis
+            </a>
+
+            <a
+                href="{{ url_for('history') }}"
+                class="nav-link"
+            >
+                History
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <main class="container">
+
+
+        <!-- =================================================
+             HEADER
+        ================================================= -->
+
+        <div class="header">
+
+            <h1>
+                Analysis Details
+            </h1>
+
+            <p>
+                {{ analysis.filename }}
+            </p>
+
+        </div>
+
+
+        <!-- =================================================
+             RESUME INFORMATION
+        ================================================= -->
+
+        <section class="section">
+
+            <h2>
+                Analysis Information
+            </h2>
+
+            <div class="info-grid">
+
+
+                <div class="info-box">
+
+                    <div class="label">
+                        Resume
+                    </div>
+
+                    <div class="value">
+                        {{ analysis.filename }}
+                    </div>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <div class="label">
+                        Target Role
+                    </div>
+
+                    <div class="value">
+                        {{ analysis.job_role }}
+                    </div>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <div class="label">
+                        Analyzed At
+                    </div>
+
+                    <div class="value">
+                        {{ analysis.created_at }}
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             SCORES
+        ================================================= -->
+
+        <section class="section">
+
+            <h2>
+                Scores
+            </h2>
+
+            <div class="score-grid">
+
+
+                <div class="score-card">
+
+                    <h3>
+                        RESUME SCORE
+                    </h3>
+
+                    <div class="score">
+                        {{ analysis.resume_score }}/100
+                    </div>
+
+                </div>
+
+
+                <div class="score-card">
+
+                    <h3>
+                        ATS SCORE
+                    </h3>
+
+                    <div class="score ats">
+                        {{ analysis.ats_score }}/100
+                    </div>
+
+                </div>
+
+
+                <div class="score-card">
+
+                    <h3>
+                        JOB MATCH
+                    </h3>
+
+                    <div class="score job">
+
+                        {% if analysis.job_description_score > 0 %}
+
+                            {{ analysis.job_description_score }}%
+
+                        {% else %}
+
+                            —
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             ATS SKILLS
+        ================================================= -->
+
+        <section class="section">
+
+            <h2>
+                ATS Skills
+            </h2>
+
+
+            <h3>
+                Matched Skills
+            </h3>
+
+            {% if analysis.found_skills %}
+
+                <div class="skills">
+
+                    {% for skill in analysis.found_skills %}
+
+                        <span class="skill">
+                            ✓ {{ skill }}
+                        </span>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <p class="empty">
+                    No matching skills found.
+                </p>
+
+            {% endif %}
+
+
+            <h3>
+                Missing Role Skills
+            </h3>
+
+            {% if analysis.missing_skills %}
+
+                <div class="skills">
+
+                    {% for skill in analysis.missing_skills %}
+
+                        <span class="skill missing">
+                            ✗ {{ skill }}
+                        </span>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <p class="empty">
+                    No major missing skills.
+                </p>
+
+            {% endif %}
+
+        </section>
+
+
+        <!-- =================================================
+             JOB DESCRIPTION MATCH
+        ================================================= -->
+
+        {% if analysis.job_description_score > 0 %}
+
+        <section class="section">
+
+            <h2>
+                Job Description Match
+            </h2>
+
+
+            <h3>
+                Matched Job Skills
+            </h3>
+
+            {% if analysis.job_matched_skills %}
+
+                <div class="skills">
+
+                    {% for skill in analysis.job_matched_skills %}
+
+                        <span class="skill">
+                            ✓ {{ skill }}
+                        </span>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <p class="empty">
+                    No matching job-description skills.
+                </p>
+
+            {% endif %}
+
+
+            <h3>
+                Missing Job Skills
+            </h3>
+
+            {% if analysis.job_missing_skills %}
+
+                <div class="skills">
+
+                    {% for skill in analysis.job_missing_skills %}
+
+                        <span class="skill missing">
+                            ✗ {{ skill }}
+                        </span>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <p class="empty">
+                    🎉 No missing detected job skills.
+                </p>
+
+            {% endif %}
+
+
+        </section>
+
+        {% endif %}
+
+
+        <!-- =================================================
+             FEEDBACK
+        ================================================= -->
+
+        <section class="section">
+
+            <h2>
+                Recommendations
+            </h2>
+
+
+            {% if analysis.feedback %}
+
+                <ul class="feedback-list">
+
+                    {% for item in analysis.feedback %}
+
+                        <li>
+                            {{ item }}
+                        </li>
+
+                    {% endfor %}
+
+                </ul>
+
+            {% else %}
+
+                <p class="empty">
+                    No recommendations available.
+                </p>
+
+            {% endif %}
+
+        </section>
+
+
+        <!-- =================================================
+             BUTTONS
+        ================================================= -->
+
+        <div class="buttons">
+
+            <a
+                href="{{ url_for('index') }}"
+                class="button primary"
+            >
+                New Analysis
+            </a>
+
+            <a
+                href="{{ url_for('history') }}"
+                class="button secondary"
+            >
+                Back to History
+            </a>
+
+        </div>
+
+
+    </main>
+
+
+</body>
+
+</html>

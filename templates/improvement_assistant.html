@@ -1,0 +1,202 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Resume Improvement Assistant</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #172033;
+        }
+        header {
+            background: #172554;
+            color: white;
+            padding: 22px 6%;
+        }
+        header h1 { margin: 0 0 8px; }
+        header p { margin: 0; color: #dbeafe; }
+        main {
+            width: min(1000px, 92%);
+            margin: 30px auto;
+        }
+        .card {
+            background: white;
+            padding: 26px;
+            margin-bottom: 22px;
+            border-radius: 14px;
+            box-shadow: 0 4px 18px #17255412;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin: 18px 0 8px;
+        }
+        textarea, select {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font: inherit;
+        }
+        textarea { min-height: 150px; resize: vertical; }
+        button, .link {
+            display: inline-block;
+            padding: 12px 18px;
+            margin-top: 16px;
+            border: 0;
+            border-radius: 8px;
+            background: #2563eb;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .link { background: #e2e8f0; color: #172033; }
+        .error {
+            padding: 12px;
+            background: #fee2e2;
+            color: #991b1b;
+            border-radius: 8px;
+        }
+        .result {
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            padding: 18px;
+            border-radius: 8px;
+            line-height: 1.6;
+        }
+        li { margin-bottom: 10px; }
+        .hint { color: #64748b; font-size: 14px; }
+    </style>
+</head>
+<body>
+<header>
+    <h1>AI Resume Improvement Assistant</h1>
+    <p>Make your resume bullets clearer, stronger, and more professional.</p>
+</header>
+
+<main>
+    <section class="card">
+        <h2>Improve a resume bullet</h2>
+        <p>Paste a project description or work-experience bullet below.</p>
+
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+
+        <form method="POST" action="{{ url_for('improve_resume') }}">
+            <label for="bullet_text">Your resume bullet</label>
+            <textarea id="bullet_text" name="bullet_text"
+                maxlength="2000" required
+                placeholder="Example: Worked on a Python project to analyze data.">{{ original_text or '' }}</textarea>
+
+            <label for="job_role">Target job role</label>
+            <select id="job_role" name="job_role">
+                {% if roles is mapping %}
+                    {% for role in roles.keys() %}
+                        <option value="{{ role }}"
+                            {% if job_role == role %}selected{% endif %}>
+                            {{ role }}
+                        </option>
+                    {% endfor %}
+                {% else %}
+                    {% for role in roles %}
+                        <option value="{{ role }}"
+                            {% if job_role == role %}selected{% endif %}>
+                            {{ role }}
+                        </option>
+                    {% endfor %}
+                {% endif %}
+            </select>
+
+            <label for="focus">Improvement focus</label>
+            <select id="focus" name="focus">
+                <option value="impact" {% if focus == 'impact' %}selected{% endif %}>Impact and achievements</option>
+                <option value="technical" {% if focus == 'technical' %}selected{% endif %}>Technical detail</option>
+                <option value="concise" {% if focus == 'concise' %}selected{% endif %}>Conciseness</option>
+                <option value="leadership" {% if focus == 'leadership' %}selected{% endif %}>Leadership and ownership</option>
+            </select>
+
+            <p class="hint">Only use suggested wording that accurately reflects your experience.</p>
+            <button type="submit">Improve My Bullet</button>
+        </form>
+    </section>
+
+    {% if result %}
+    <section class="card">
+        <h2>Suggested improvement</h2>
+
+        {% if result is mapping %}
+            <label>Original text</label>
+            <div class="result">{{ result.original }}</div>
+
+            <label>Improved text</label>
+            <div class="result" id="improvedText">{{ result.improved }}</div>
+
+            <button type="button" onclick="copyImprovedText()">Copy Improved Text</button>
+
+            {% if result.changes %}
+                <h3>Changes made</h3>
+                <ul>
+                    {% for change in result.changes %}
+                        <li>{{ change }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            {% if result.suggestions %}
+                <h3>Further recommendations</h3>
+                <ul>
+                    {% for suggestion in result.suggestions %}
+                        <li>{{ suggestion }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% else %}
+            <div class="result">{{ result }}</div>
+        {% endif %}
+    </section>
+    {% endif %}
+
+    <a class="link" href="{{ url_for('index') }}">Back to Home</a>
+    <a class="link" href="{{ url_for('history') }}">Analysis History</a>
+</main>
+
+<script>
+function copyImprovedText() {
+    const text = document.getElementById("improvedText").innerText;
+
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text)
+            .then(() => alert("Improved text copied!"))
+            .catch(() => fallbackCopy(text));
+    } else {
+        fallbackCopy(text);
+    }
+}
+
+function fallbackCopy(text) {
+    const area = document.createElement("textarea");
+    area.value = text;
+    document.body.appendChild(area);
+    area.select();
+
+    try {
+        document.execCommand("copy");
+        alert("Improved text copied!");
+    } catch (error) {
+        alert("Please select and copy the text manually.");
+    }
+
+    area.remove();
+}
+</script>
+</body>
+</html>

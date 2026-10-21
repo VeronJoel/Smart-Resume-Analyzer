@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Resume Analytics Dashboard</title>
+
+
+    <style>
+
+        /* =================================================
+           RESET
+        ================================================= */
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+
+        body {
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background: #f5f7fb;
+
+            color: #1f2937;
+        }
+
+
+        /* =================================================
+           NAVBAR
+        ================================================= */
+
+        .navbar {
+
+            background: #111827;
+
+            color: white;
+
+            padding: 18px 8%;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+        }
+
+
+        .brand {
+
+            font-size: 22px;
+
+            font-weight: bold;
+        }
+
+
+        .nav-link {
+
+            color: white;
+
+            text-decoration: none;
+
+            background: #374151;
+
+            padding: 9px 15px;
+
+            border-radius: 7px;
+        }
+
+
+        /* =================================================
+           MAIN CONTAINER
+        ================================================= */
+
+        .container {
+
+            width: 92%;
+
+            max-width: 1250px;
+
+            margin: 40px auto 70px;
+        }
+
+
+        /* =================================================
+           HEADER
+        ================================================= */
+
+        .header {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 30px;
+        }
+
+
+        .header h1 {
+
+            font-size: 34px;
+
+            margin-bottom: 7px;
+        }
+
+
+        .header p {
+
+            color: #6b7280;
+        }
+
+
+        .new-analysis {
+
+            background: #2563eb;
+
+            color: white;
+
+            text-decoration: none;
+
+            padding: 12px 18px;
+
+            border-radius: 8px;
+
+            font-weight: bold;
+        }
+
+
+        /* =================================================
+           STATISTICS CARDS
+        ================================================= */
+
+        .stats {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(5, 1fr);
+
+            gap: 15px;
+
+            margin-bottom: 30px;
+        }
+
+
+        .stat-card {
+
+            background: white;
+
+            padding: 22px;
+
+            border-radius: 14px;
+
+            text-align: center;
+
+            box-shadow:
+                0 5px 20px
+                rgba(0, 0, 0, 0.05);
+
+            transition:
+                transform 0.2s ease;
+        }
+
+
+        .stat-card:hover {
+
+            transform: translateY(-3px);
+        }
+
+
+        .stat-card h3 {
+
+            font-size: 12px;
+
+            color: #6b7280;
+
+            margin-bottom: 10px;
+
+            letter-spacing: 0.5px;
+        }
+
+
+        .stat-value {
+
+            font-size: 29px;
+
+            font-weight: bold;
+
+            color: #2563eb;
+        }
+
+
+        .stat-description {
+
+            margin-top: 5px;
+
+            color: #9ca3af;
+
+            font-size: 12px;
+        }
+
+
+        /* =================================================
+           DASHBOARD GRID
+        ================================================= */
+
+        .dashboard-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 25px;
+
+            margin-bottom: 30px;
+        }
+
+
+        .dashboard-card {
+
+            background: white;
+
+            border-radius: 14px;
+
+            padding: 28px;
+
+            box-shadow:
+                0 5px 20px
+                rgba(0, 0, 0, 0.05);
+        }
+
+
+        .dashboard-card h2 {
+
+            font-size: 21px;
+
+            margin-bottom: 8px;
+        }
+
+
+        .dashboard-description {
+
+            color: #6b7280;
+
+            font-size: 14px;
+
+            margin-bottom: 25px;
+        }
+
+
+        /* =================================================
+           PERFORMANCE BARS
+        ================================================= */
+
+        .metric {
+
+            margin-bottom: 22px;
+        }
+
+
+        .metric:last-child {
+
+            margin-bottom: 0;
+        }
+
+
+        .metric-header {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 8px;
+        }
+
+
+        .metric-name {
+
+            font-weight: bold;
+
+            font-size: 14px;
+        }
+
+
+        .metric-value {
+
+            font-weight: bold;
+
+            color: #2563eb;
+        }
+
+
+        .score-progress {
+
+            width: 100%;
+
+            height: 13px;
+        }
+
+
+        /* =================================================
+           PERFORMANCE SUMMARY
+        ================================================= */
+
+        .performance-box {
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 15px;
+        }
+
+
+        .performance-item {
+
+            background: #f9fafb;
+
+            border-radius: 10px;
+
+            padding: 18px;
+        }
+
+
+        .performance-label {
+
+            font-size: 12px;
+
+            color: #6b7280;
+
+            margin-bottom: 6px;
+        }
+
+
+        .performance-value {
+
+            font-size: 25px;
+
+            font-weight: bold;
+
+            color: #111827;
+        }
+
+
+        .performance-note {
+
+            margin-top: 5px;
+
+            font-size: 12px;
+
+            color: #6b7280;
+        }
+
+
+        /* =================================================
+           TABLE
+        ================================================= */
+
+        .table-card {
+
+            background: white;
+
+            border-radius: 14px;
+
+            padding: 25px;
+
+            box-shadow:
+                0 5px 20px
+                rgba(0, 0, 0, 0.05);
+
+            overflow-x: auto;
+        }
+
+
+        .table-header {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 20px;
+        }
+
+
+        .table-header h2 {
+
+            font-size: 21px;
+        }
+
+
+        .table-header p {
+
+            color: #6b7280;
+
+            font-size: 13px;
+        }
+
+
+        table {
+
+            width: 100%;
+
+            border-collapse: collapse;
+        }
+
+
+        th {
+
+            text-align: left;
+
+            background: #f9fafb;
+
+            color: #6b7280;
+
+            font-size: 12px;
+
+            padding: 14px;
+        }
+
+
+        td {
+
+            padding: 16px 14px;
+
+            border-bottom:
+                1px solid #e5e7eb;
+        }
+
+
+        tr:last-child td {
+
+            border-bottom: none;
+        }
+
+
+        .filename {
+
+            font-weight: bold;
+
+            max-width: 220px;
+
+            word-break: break-word;
+        }
+
+
+        .role {
+
+            color: #6b7280;
+
+            font-size: 13px;
+        }
+
+
+        /* =================================================
+           SCORE BADGES
+        ================================================= */
+
+        .score-badge {
+
+            display: inline-block;
+
+            padding: 6px 10px;
+
+            border-radius: 15px;
+
+            background: #dbeafe;
+
+            color: #1e40af;
+
+            font-weight: bold;
+
+            font-size: 13px;
+        }
+
+
+        .ats-badge {
+
+            background: #dcfce7;
+
+            color: #166534;
+        }
+
+
+        .job-badge {
+
+            background: #fef3c7;
+
+            color: #92400e;
+        }
+
+
+        .date {
+
+            color: #6b7280;
+
+            font-size: 12px;
+        }
+
+
+        /* =================================================
+           ACTION BUTTONS
+        ================================================= */
+
+        .actions {
+
+            display: flex;
+
+            gap: 8px;
+        }
+
+
+        .view-btn,
+        .delete-btn {
+
+            border: none;
+
+            text-decoration: none;
+
+            padding: 8px 12px;
+
+            border-radius: 6px;
+
+            font-size: 13px;
+
+            cursor: pointer;
+        }
+
+
+        .view-btn {
+
+            background: #2563eb;
+
+            color: white;
+        }
+
+
+        .delete-btn {
+
+            background: #fee2e2;
+
+            color: #991b1b;
+        }
+
+
+        /* =================================================
+           EMPTY STATE
+        ================================================= */
+
+        .empty {
+
+            text-align: center;
+
+            padding: 65px 20px;
+
+            color: #6b7280;
+        }
+
+
+        .empty h2 {
+
+            color: #374151;
+
+            margin-bottom: 10px;
+        }
+
+
+        .empty p {
+
+            margin-bottom: 20px;
+        }
+
+
+        .empty-button {
+
+            display: inline-block;
+
+            background: #2563eb;
+
+            color: white;
+
+            text-decoration: none;
+
+            padding: 11px 18px;
+
+            border-radius: 8px;
+
+            font-weight: bold;
+        }
+
+
+        /* =================================================
+           RESPONSIVE
+        ================================================= */
+
+        @media (max-width: 1050px) {
+
+            .stats {
+
+                grid-template-columns:
+                    repeat(3, 1fr);
+            }
+
+        }
+
+
+        @media (max-width: 800px) {
+
+            .dashboard-grid {
+
+                grid-template-columns: 1fr;
+            }
+
+
+            .stats {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+
+            .header {
+
+                flex-direction: column;
+
+                align-items: flex-start;
+
+                gap: 15px;
+            }
+
+
+            .header h1 {
+
+                font-size: 28px;
+            }
+
+        }
+
+
+        @media (max-width: 500px) {
+
+            .stats {
+
+                grid-template-columns: 1fr;
+            }
+
+
+            .performance-box {
+
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =================================================
+         NAVBAR
+    ================================================= -->
+
+    <nav class="navbar">
+
+        <div class="brand">
+            Smart Resume Analyzer
+        </div>
+
+
+        <a
+            href="{{ url_for('index') }}"
+            class="nav-link"
+        >
+            New Analysis
+        </a>
+
+    </nav>
+
+
+    <main class="container">
+
+
+        <!-- =================================================
+             HEADER
+        ================================================= -->
+
+        <div class="header">
+
+            <div>
+
+                <h1>
+                    Analytics Dashboard
+                </h1>
+
+                <p>
+                    Track your resume performance and improvement.
+                </p>
+
+            </div>
+
+
+            <a
+                href="{{ url_for('index') }}"
+                class="new-analysis"
+            >
+                + New Analysis
+            </a>
+
+        </div>
+
+
+        <!-- =================================================
+             STATISTICS
+        ================================================= -->
+
+        <div class="stats">
+
+
+            <div class="stat-card">
+
+                <h3>
+                    TOTAL ANALYSES
+                </h3>
+
+                <div class="stat-value">
+                    {{ statistics.total_analyses }}
+                </div>
+
+                <div class="stat-description">
+                    Resumes analyzed
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <h3>
+                    BEST RESUME SCORE
+                </h3>
+
+                <div class="stat-value">
+                    {{ statistics.best_resume_score }}
+                </div>
+
+                <div class="stat-description">
+                    Out of 100
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <h3>
+                    BEST ATS SCORE
+                </h3>
+
+                <div class="stat-value">
+                    {{ statistics.best_ats_score }}
+                </div>
+
+                <div class="stat-description">
+                    Out of 100
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <h3>
+                    AVG RESUME SCORE
+                </h3>
+
+                <div class="stat-value">
+                    {{ statistics.average_resume_score }}
+                </div>
+
+                <div class="stat-description">
+                    Across all analyses
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <h3>
+                    BEST JOB MATCH
+                </h3>
+
+                <div class="stat-value">
+                    {{ statistics.best_job_description_score }}%
+                </div>
+
+                <div class="stat-description">
+                    Job description match
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- =================================================
+             DASHBOARD GRID
+        ================================================= -->
+
+        <div class="dashboard-grid">
+
+
+            <!-- =================================================
+                 AVERAGE PERFORMANCE
+            ================================================= -->
+
+            <section class="dashboard-card">
+
+                <h2>
+                    Average Performance
+                </h2>
+
+                <p class="dashboard-description">
+                    Your average scores across all analyzed resumes.
+                </p>
+
+
+                <!-- RESUME SCORE -->
+
+                <div class="metric">
+
+                    <div class="metric-header">
+
+                        <span class="metric-name">
+                            Resume Score
+                        </span>
+
+                        <span class="metric-value">
+                            {{ statistics.average_resume_score }}/100
+                        </span>
+
+                    </div>
+
+
+                    <progress
+                        class="score-progress"
+                        value="{{ statistics.average_resume_score }}"
+                        max="100"
+                    ></progress>
+
+                </div>
+
+
+                <!-- ATS SCORE -->
+
+                <div class="metric">
+
+                    <div class="metric-header">
+
+                        <span class="metric-name">
+                            ATS Compatibility
+                        </span>
+
+                        <span class="metric-value">
+                            {{ statistics.average_ats_score }}/100
+                        </span>
+
+                    </div>
+
+
+                    <progress
+                        class="score-progress"
+                        value="{{ statistics.average_ats_score }}"
+                        max="100"
+                    ></progress>
+
+                </div>
+
+
+                <!-- JOB MATCH -->
+
+                <div class="metric">
+
+                    <div class="metric-header">
+
+                        <span class="metric-name">
+                            Job Description Match
+                        </span>
+
+                        <span class="metric-value">
+                            {{ statistics.average_job_description_score }}%
+                        </span>
+
+                    </div>
+
+
+                    <progress
+                        class="score-progress"
+                        value="{{ statistics.average_job_description_score }}"
+                        max="100"
+                    ></progress>
+
+                </div>
+
+
+            </section>
+
+
+            <!-- =================================================
+                 BEST PERFORMANCE
+            ================================================= -->
+
+            <section class="dashboard-card">
+
+                <h2>
+                    Best Performance
+                </h2>
+
+                <p class="dashboard-description">
+                    Your strongest results so far.
+                </p>
+
+
+                <div class="performance-box">
+
+
+                    <div class="performance-item">
+
+                        <div class="performance-label">
+                            BEST RESUME
+                        </div>
+
+                        <div class="performance-value">
+                            {{ statistics.best_resume_score }}/100
+                        </div>
+
+                        <div class="performance-note">
+                            Overall resume quality
+                        </div>
+
+                    </div>
+
+
+                    <div class="performance-item">
+
+                        <div class="performance-label">
+                            BEST ATS
+                        </div>
+
+                        <div class="performance-value">
+                            {{ statistics.best_ats_score }}/100
+                        </div>
+
+                        <div class="performance-note">
+                            ATS compatibility
+                        </div>
+
+                    </div>
+
+
+                    <div class="performance-item">
+
+                        <div class="performance-label">
+                            BEST JOB MATCH
+                        </div>
+
+                        <div class="performance-value">
+                            {{ statistics.best_job_description_score }}%
+                        </div>
+
+                        <div class="performance-note">
+                            Job description match
+                        </div>
+
+                    </div>
+
+
+                    <div class="performance-item">
+
+                        <div class="performance-label">
+                            ANALYSES
+                        </div>
+
+                        <div class="performance-value">
+                            {{ statistics.total_analyses }}
+                        </div>
+
+                        <div class="performance-note">
+                            Total resumes tested
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </section>
+
+
+        </div>
+
+
+        <!-- =================================================
+             RECENT ANALYSES
+        ================================================= -->
+
+        <div class="table-card">
+
+
+            {% if analyses %}
+
+
+                <div class="table-header">
+
+                    <div>
+
+                        <h2>
+                            Recent Analyses
+                        </h2>
+
+                        <p>
+                            Your latest resume analysis results.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <table>
+
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Resume
+                            </th>
+
+                            <th>
+                                Role
+                            </th>
+
+                            <th>
+                                Resume Score
+                            </th>
+
+                            <th>
+                                ATS
+                            </th>
+
+                            <th>
+                                Job Match
+                            </th>
+
+                            <th>
+                                Date
+                            </th>
+
+                            <th>
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+
+                        {% for item in analyses %}
+
+                        <tr>
+
+
+                            <td>
+
+                                <div class="filename">
+                                    {{ item.filename }}
+                                </div>
+
+                            </td>
+
+
+                            <td>
+
+                                <div class="role">
+                                    {{ item.job_role }}
+                                </div>
+
+                            </td>
+
+
+                            <td>
+
+                                <span class="score-badge">
+                                    {{ item.resume_score }}/100
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                <span class="score-badge ats-badge">
+                                    {{ item.ats_score }}/100
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                {% if item.job_description_score > 0 %}
+
+                                    <span class="score-badge job-badge">
+                                        {{ item.job_description_score }}%
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="date">
+                                        —
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                <span class="date">
+                                    {{ item.created_at }}
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                <div class="actions">
+
+
+                                    <a
+                                        href="{{ url_for('history_detail', analysis_id=item.id) }}"
+                                        class="view-btn"
+                                    >
+                                        View
+                                    </a>
+
+
+                                    <form
+                                        action="{{ url_for('delete_history', analysis_id=item.id) }}"
+                                        method="POST"
+                                        onsubmit="return confirm('Delete this analysis?');"
+                                    >
+
+                                        <button
+                                            type="submit"
+                                            class="delete-btn"
+                                        >
+                                            Delete
+                                        </button>
+
+                                    </form>
+
+
+                                </div>
+
+                            </td>
+
+
+                        </tr>
+
+                        {% endfor %}
+
+
+                    </tbody>
+
+
+                </table>
+
+
+            {% else %}
+
+
+                <div class="empty">
+
+                    <h2>
+                        No analyses yet
+                    </h2>
+
+                    <p>
+                        Upload your first resume to start
+                        building your analytics dashboard.
+                    </p>
+
+
+                    <a
+                        href="{{ url_for('index') }}"
+                        class="empty-button"
+                    >
+                        Analyze Your First Resume
+                    </a>
+
+                </div>
+
+
+            {% endif %}
+
+
+        </div>
+
+
+    </main>
+
+
+</body>
+
+</html>

@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Analysis Results | Smart Resume Analyzer</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+        .result-container {
+            width: 94%;
+            max-width: 1100px;
+            margin: 30px auto;
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .result-header h1 {
+            margin-bottom: 8px;
+        }
+
+        .result-actions,
+        .footer-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .result-button {
+            display: inline-block;
+            padding: 11px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            border: 1px solid #d1d5db;
+            color: #374151;
+            background: white;
+            cursor: pointer;
+        }
+
+        .result-button.primary {
+            background: #4f46e5;
+            border-color: #4f46e5;
+            color: white;
+        }
+
+        .result-card {
+            background: white;
+            padding: 24px;
+            margin-bottom: 22px;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            box-shadow: 0 3px 12px rgba(15, 23, 42, 0.035);
+            min-width: 0;
+        }
+
+        .health-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .health-box h2 {
+            margin: 5px 0;
+        }
+
+        .health-score {
+            font-size: 36px;
+            font-weight: bold;
+            color: #4f46e5;
+        }
+
+        .score-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+            margin-bottom: 22px;
+        }
+
+        .score-box {
+            background: white;
+            padding: 22px;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            min-width: 0;
+        }
+
+        .score-value {
+            font-size: 32px;
+            font-weight: bold;
+            margin: 8px 0;
+        }
+
+        .muted {
+            color: #6b7280;
+        }
+
+        .score-progress {
+            display: block;
+            width: 100%;
+            height: 10px;
+            margin-top: 12px;
+            accent-color: #4f46e5;
+        }
+
+        .breakdown-grid,
+        .two-column,
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .breakdown-item {
+            margin-bottom: 18px;
+        }
+
+        .breakdown-title {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .info-item {
+            padding: 14px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            overflow-wrap: anywhere;
+        }
+
+        .info-item strong {
+            display: block;
+            color: #6b7280;
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+
+        .skill-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .skill-tag {
+            display: inline-block;
+            padding: 6px 11px;
+            border-radius: 18px;
+            font-size: 13px;
+            font-weight: bold;
+            overflow-wrap: anywhere;
+        }
+
+        .skill-found {
+            color: #166534;
+            background: #dcfce7;
+        }
+
+        .skill-missing {
+            color: #991b1b;
+            background: #fee2e2;
+        }
+
+        .feedback-list li {
+            margin-bottom: 12px;
+        }
+
+        .section-status {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .status-present {
+            color: #15803d;
+            font-weight: bold;
+        }
+
+        .status-missing {
+            color: #b91c1c;
+            font-weight: bold;
+        }
+
+        .extracted-text {
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+            background: #f9fafb;
+            padding: 15px;
+            margin-top: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        details summary {
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .match-notice {
+            padding: 14px 16px;
+            margin: 14px 0;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            background: #f9fafb;
+            overflow-wrap: anywhere;
+        }
+
+        .match-notice.warning {
+            border-color: #fcd34d;
+            background: #fffbeb;
+            color: #92400e;
+        }
+
+        .match-summary {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            margin: 16px 0;
+        }
+
+        .match-summary-item {
+            padding: 14px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+        }
+
+        .match-summary-item strong {
+            display: block;
+            color: #6b7280;
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+
+        @media (max-width: 700px) {
+            .match-summary {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .score-grid,
+            .breakdown-grid,
+            .two-column,
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .result-card {
+                padding: 17px;
+            }
+        }
+
+        @media print {
+            .navbar,
+            .result-actions,
+            .footer-actions {
+                display: none !important;
+            }
+
+            body {
+                background: white;
+            }
+
+            .result-container {
+                width: 100%;
+                margin: 0;
+            }
+
+            .result-card,
+            .score-box {
+                box-shadow: none;
+                break-inside: avoid;
+            }
+
+            .extracted-text {
+                max-height: none;
+                overflow: visible;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+{% set total_score = analysis.get('total_score', analysis.get('total', 0))|float %}
+{% set ats_score = ats_analysis.get('ats_score', 0)|float %}
+
+{% if job_match %}
+    {% set job_score = job_match.get('job_description_score', 0)|float %}
+{% else %}
+    {% set job_score = 0 %}
+{% endif %}
+
+{% if total_score >= 90 %}
+    {% set health_title = 'Excellent Resume' %}
+    {% set health_description = 'Your resume looks strong. Keep tailoring it to individual job descriptions.' %}
+{% elif total_score >= 75 %}
+    {% set health_title = 'Very Good Resume' %}
+    {% set health_description = 'Your resume has a solid foundation, with a few areas to improve.' %}
+{% elif total_score >= 60 %}
+    {% set health_title = 'Good Foundation' %}
+    {% set health_description = 'Some targeted improvements could make your resume stronger.' %}
+{% elif total_score >= 40 %}
+    {% set health_title = 'Needs Improvement' %}
+    {% set health_description = 'Follow the recommendations below to improve your resume.' %}
+{% else %}
+    {% set health_title = 'Needs Major Improvement' %}
+    {% set health_description = 'Start with completeness, relevant skills, and clear project descriptions.' %}
+{% endif %}
+
+<nav class="navbar">
+    <a href="{{ url_for('index') }}" class="brand">
+        Smart Resume Analyzer
+    </a>
+
+    <div class="nav-links">
+        <a href="{{ url_for('index') }}">Home</a>
+        <a href="{{ url_for('history') }}">Dashboard</a>
+    </div>
+</nav>
+
+<main class="result-container">
+
+    <header class="result-header">
+        <div>
+            <h1>Resume Analysis Results</h1>
+            <p class="muted">
+                File: <strong>{{ filename }}</strong><br>
+                Target Role: <strong>{{ job_role }}</strong>
+            </p>
+        </div>
+
+        <div class="result-actions">
+            <a href="{{ url_for('report', analysis_id=analysis_id) }}"
+               class="result-button primary"
+               target="_blank"
+               rel="noopener">
+                Download Report
+            </a>
+
+            <a href="{{ url_for('history') }}" class="result-button">
+                View Dashboard
+            </a>
+        </div>
+    </header>
+
+    <section class="result-card health-box">
+        <div>
+            <p class="muted">RESUME HEALTH</p>
+            <h2>{{ health_title }}</h2>
+            <p class="muted">{{ health_description }}</p>
+        </div>
+
+        <div class="health-score">
+            {{ total_score|round|int }}/100
+        </div>
+    </section>
+
+    <section class="score-grid">
+
+        <article class="score-box">
+            <div class="muted">Resume Score</div>
+            <div class="score-value">
+                {{ total_score|round|int }}/100
+            </div>
+
+            <progress class="score-progress"
+                      max="100"
+                      value="{{ [[total_score, 100]|min, 0]|max }}">
+            </progress>
+        </article>
+
+        <article class="score-box">
+            <div class="muted">ATS Compatibility</div>
+            <div class="score-value">
+                {{ ats_score|round|int }}/100
+            </div>
+
+            <progress class="score-progress"
+                      max="100"
+                      value="{{ [[ats_score, 100]|min, 0]|max }}">
+            </progress>
+        </article>
+
+        <article class="score-box">
+            <div class="muted">Job Description Match</div>
+
+            {% if job_match %}
+                <div class="score-value">
+                    {{ job_score|round|int }}%
+                </div>
+
+                <progress class="score-progress"
+                          max="100"
+                          value="{{ [[job_score, 100]|min, 0]|max }}">
+                </progress>
+            {% else %}
+                <div class="score-value">N/A</div>
+                <p class="muted">
+                    No job description was provided.
+                </p>
+            {% endif %}
+        </article>
+
+    </section>
+    
+    <section class="result-card">
+        <h2>Resume Score Breakdown</h2>
+
+        {% set breakdown = [
+            ('Contact Information', 'contact_score', 'contact', 10),
+            ('Education', 'education_score', 'education', 15),
+            ('Skills', 'skills_score', 'skills', 20),
+            ('Projects', 'projects_score', 'projects', 20),
+            ('Structure', 'structure_score', 'structure', 15),
+            ('Completeness', 'completeness_score', 'completeness', 20)
+        ] %}
+
+        <div class="breakdown-grid">
+            {% for label, primary_key, fallback_key, maximum in breakdown %}
+                {% set value = analysis.get(primary_key, analysis.get(fallback_key, 0))|float %}
+
+                <div class="breakdown-item">
+                    <div class="breakdown-title">
+                        <span>{{ label }}</span>
+                        <span>{{ value|round|int }}/{{ maximum }}</span>
+                    </div>
+
+                    <progress class="score-progress"
+                              max="{{ maximum }}"
+                              value="{{ [[value, maximum]|min, 0]|max }}">
+                    </progress>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    {% set project_analysis = analysis.get('project_analysis', {}) %}
+    <section class="result-card">
+        <h2>Project Quality Analysis</h2>
+
+        <p class="muted">
+            {{ project_analysis.get('summary', 'Project quality analysis is unavailable.') }}
+        </p>
+
+        <div class="info-grid">
+            <div class="info-item">
+                <strong>Project Quality Score</strong>
+                {{ project_analysis.get('score', analysis.get('projects_score', analysis.get('projects', 0))) }}/20
+            </div>
+            <div class="info-item">
+                <strong>Description Length</strong>
+                {{ project_analysis.get('description_length', 0) }} words
+            </div>
+            <div class="info-item">
+                <strong>Action Verbs Detected</strong>
+                {{ project_analysis.get('action_verbs', [])|length }}
+            </div>
+            <div class="info-item">
+                <strong>Technical Skills Detected</strong>
+                {{ project_analysis.get('technical_skills', [])|length }}
+            </div>
+        </div>
+
+        <h3>Action Verbs</h3>
+        {% if project_analysis.get('action_verbs') %}
+            <div class="skill-list">
+                {% for verb in project_analysis.get('action_verbs', []) %}
+                    <span class="skill-tag skill-found">{{ verb|title }}</span>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="muted">No strong action verbs were detected. Describe what you built, designed, or implemented.</p>
+        {% endif %}
+
+        <h3>Technical Skills Used</h3>
+        {% if project_analysis.get('technical_skills') %}
+            <div class="skill-list">
+                {% for skill in project_analysis.get('technical_skills', []) %}
+                    <span class="skill-tag skill-found">{{ skill }}</span>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="muted">Mention the technologies and tools you actually used.</p>
+        {% endif %}
+
+        <h3>Measurable Results</h3>
+        {% if project_analysis.get('has_measurable_results') %}
+            <p class="status-present">Potential measurable results or metrics were detected.</p>
+        {% else %}
+            <p class="muted">No measurable results were detected. Where possible, add truthful figures such as accuracy, processing time, users served, or performance improvements.</p>
+        {% endif %}
+
+        <h3>Suggestions to Improve Your Projects</h3>
+        {% if project_analysis.get('suggestions') %}
+            <ol class="feedback-list">
+                {% for suggestion in project_analysis.get('suggestions', []) %}
+                    <li>{{ suggestion }}</li>
+                {% endfor %}
+            </ol>
+        {% else %}
+            <p class="muted">No project improvement suggestions are available.</p>
+        {% endif %}
+    </section>
+
+    {% if resume_information %}
+    <section class="result-card">
+        <h2>Extracted Resume Information</h2>
+
+        <div class="info-grid">
+            <div class="info-item">
+                <strong>Email Address</strong>
+                {{ resume_information.get('email') or 'Not detected' }}
+            </div>
+
+            <div class="info-item">
+                <strong>Phone Number</strong>
+                {{ resume_information.get('phone') or 'Not detected' }}
+            </div>
+
+            <div class="info-item">
+                <strong>Target Role</strong>
+                {{ job_role }}
+            </div>
+
+            <div class="info-item">
+                <strong>Detected Skills</strong>
+                {{ resume_information.get('skills', [])|length }}
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <section class="result-card">
+        <h2>Detected Skills</h2>
+
+        {% if resume_information %}
+            {% set detected_skills = resume_information.get('skills', []) %}
+        {% else %}
+            {% set detected_skills = ats_analysis.get('found_skills', []) %}
+        {% endif %}
+
+        {% if detected_skills %}
+            <div class="skill-list">
+                {% for skill in detected_skills %}
+                    <span class="skill-tag skill-found">{{ skill }}</span>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="muted">No skills were detected.</p>
+        {% endif %}
+    </section>
+
+    <section class="two-column">
+
+        <article class="result-card">
+            <h2>ATS Matched Skills</h2>
+
+            {% set matched_skills = ats_analysis.get('found_skills', []) %}
+
+            {% if matched_skills %}
+                <div class="skill-list">
+                    {% for skill in matched_skills %}
+                        <span class="skill-tag skill-found">{{ skill }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="muted">No matching skills were detected.</p>
+            {% endif %}
+        </article>
+
+        <article class="result-card">
+            <h2>Missing Role Skills</h2>
+
+            {% set missing_skills = ats_analysis.get('missing_skills', []) %}
+
+            {% if missing_skills %}
+                <div class="skill-list">
+                    {% for skill in missing_skills %}
+                        <span class="skill-tag skill-missing">{{ skill }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="muted">No missing role skills were reported.</p>
+            {% endif %}
+        </article>
+
+    </section>
+
+    {% if job_match %}
+    <section class="result-card">
+        <h2>Job Description Analysis</h2>
+
+        {% set job_is_valid = job_match.get('is_valid', true) %}
+        {% set job_required_count = job_match.get('required_count', job_match.get('required_skills', [])|length) %}
+
+        {% if not job_is_valid %}
+            <div class="match-notice warning">
+                <strong>Job description is too short</strong>
+                <p>{{ job_match.get('message', 'Paste the full job posting to calculate a meaningful match.') }}</p>
+            </div>
+        {% elif job_required_count == 0 %}
+            <div class="match-notice warning">
+                <strong>No recognizable skills found</strong>
+                <p>{{ job_match.get('message', 'The job description did not contain skills from the current skill catalog.') }}</p>
+            </div>
+        {% else %}
+            <div class="match-notice">
+                {{ job_match.get('message', 'Match score is based on skills recognized in the job description.') }}
+            </div>
+
+            <div class="match-summary">
+                <div class="match-summary-item">
+                    <strong>Job Match Score</strong>
+                    {{ job_score|round|int }}%
+                </div>
+
+                <div class="match-summary-item">
+                    <strong>Matched Skills</strong>
+                    {{ job_match.get('matched_count', job_match.get('matched_skills', [])|length) }}
+                </div>
+
+                <div class="match-summary-item">
+                    <strong>Missing Skills</strong>
+                    {{ job_match.get('missing_count', job_match.get('missing_skills', [])|length) }}
+                </div>
+            </div>
+
+            <h3>Matched Skills</h3>
+            {% if job_match.get('matched_skills') %}
+                <div class="skill-list">
+                    {% for skill in job_match.get('matched_skills', []) %}
+                        <span class="skill-tag skill-found">{{ skill }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="muted">No matching skills were detected.</p>
+            {% endif %}
+
+            <h3>Missing Skills</h3>
+            {% if job_match.get('missing_skills') %}
+                <div class="skill-list">
+                    {% for skill in job_match.get('missing_skills', []) %}
+                        <span class="skill-tag skill-missing">{{ skill }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="muted">No missing job skills were reported.</p>
+            {% endif %}
+        {% endif %}
+    </section>
+    {% endif %}
+
+    <section class="result-card">
+        <h2>Smart Improvement Recommendations</h2>
+
+        {% if feedback %}
+            <ol class="feedback-list">
+                {% for item in feedback %}
+                    <li>{{ item }}</li>
+                {% endfor %}
+            </ol>
+        {% else %}
+            <p class="muted">
+                No recommendations were generated.
+            </p>
+        {% endif %}
+    </section>
+
+    {% if section_status %}
+    <section class="result-card">
+        <h2>Resume Section Check</h2>
+
+        {% for section, status in section_status.items() %}
+            {% if status is mapping %}
+                {% set is_present = status.get('present', false) %}
+            {% else %}
+                {% set is_present = status %}
+            {% endif %}
+
+            <div class="section-status">
+                <span>{{ section|replace('_', ' ')|title }}</span>
+
+                {% if is_present %}
+                    <span class="status-present">Detected</span>
+                {% else %}
+                    <span class="status-missing">Not detected</span>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </section>
+    {% endif %}
+
+    {% if resume_information and resume_information.get('text') %}
+    <section class="result-card">
+        <details>
+            <summary>View Extracted Resume Text</summary>
+            <div class="extracted-text">{{ resume_information.get('text') }}</div>
+        </details>
+    </section>
+    {% endif %}
+
+    <div class="footer-actions">
+        <a href="{{ url_for('index') }}" class="result-button primary">
+            Analyze Another Resume
+        </a>
+
+        <a href="{{ url_for('history') }}" class="result-button">
+            View Dashboard
+        </a>
+
+        <a href="{{ url_for('report', analysis_id=analysis_id) }}"
+           class="result-button"
+           target="_blank"
+           rel="noopener">
+            Download Report
+        </a>
+    </div>
+
+</main>
+
+</body>
+</html>

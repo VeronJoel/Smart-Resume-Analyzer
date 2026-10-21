@@ -1,0 +1,204 @@
+{
+    "AI Engineer": {
+        "skills": [
+            "Python",
+            "Machine Learning",
+            "Deep Learning",
+            "Artificial Intelligence",
+            "TensorFlow",
+            "PyTorch",
+            "Scikit-learn",
+            "Natural Language Processing",
+            "Computer Vision",
+            "NumPy",
+            "Pandas",
+            "Git",
+            "Docker",
+            "SQL"
+        ]
+    },
+
+    "ML Engineer": {
+        "skills": [
+            "Python",
+            "Machine Learning",
+            "Deep Learning",
+            "TensorFlow",
+            "PyTorch",
+            "Scikit-learn",
+            "NumPy",
+            "Pandas",
+            "Docker",
+            "Kubernetes",
+            "AWS",
+            "Git",
+            "SQL"
+        ]
+    },
+
+    "Data Scientist": {
+        "skills": [
+            "Python",
+            "Machine Learning",
+            "Statistics",
+            "Pandas",
+            "NumPy",
+            "Scikit-learn",
+            "Matplotlib",
+            "Seaborn",
+            "SQL",
+            "Data Analysis",
+            "Data Science",
+            "Jupyter",
+            "Git"
+        ]
+    },
+
+    "Data Analyst": {
+        "skills": [
+            "SQL",
+            "Python",
+            "Excel",
+            "Power BI",
+            "Tableau",
+            "Data Analysis",
+            "Statistics",
+            "Pandas",
+            "NumPy",
+            "Data Visualization"
+        ]
+    },
+
+    "Web Developer": {
+        "skills": [
+            "HTML",
+            "CSS",
+            "JavaScript",
+            "TypeScript",
+            "React",
+            "Angular",
+            "Node.js",
+            "Flask",
+            "Django",
+            "SQL",
+            "MongoDB",
+            "REST API",
+            "Git",
+            "GitHub"
+        ]
+    },
+
+    "Frontend Developer": {
+        "skills": [
+            "HTML",
+            "CSS",
+            "JavaScript",
+            "TypeScript",
+            "React",
+            "Angular",
+            "Vue",
+            "Responsive Design",
+            "Git",
+            "GitHub",
+            "REST API"
+        ]
+    },
+
+    "Backend Developer": {
+        "skills": [
+            "Python",
+            "Java",
+            "Node.js",
+            "Flask",
+            "Django",
+            "Spring",
+            "SQL",
+            "PostgreSQL",
+            "MongoDB",
+            "REST API",
+            "Docker",
+            "Git",
+            "GitHub"
+        ]
+    },
+
+    "Software Engineer": {
+        "skills": [
+            "Python",
+            "Java",
+            "C++",
+            "JavaScript",
+            "Data Structures",
+            "Algorithms",
+            "Object Oriented Programming",
+            "SQL",
+            "Git",
+            "GitHub",
+            "REST API",
+            "Docker"
+        ]
+    },
+
+    "Mobile App Developer": {
+        "skills": [
+            "Flutter",
+            "Dart",
+            "Android",
+            "Java",
+            "Kotlin",
+            "Firebase",
+            "REST API",
+            "Git",
+            "GitHub",
+            "UI/UX"
+        ]
+    },
+
+    "DevOps Engineer": {
+        "skills": [
+            "Linux",
+            "Docker",
+            "Kubernetes",
+            "AWS",
+            "Azure",
+            "CI/CD",
+            "Git",
+            "GitHub",
+            "Jenkins",
+            "Terraform",
+            "Python",
+            "Shell Scripting"
+        ]
+    },
+
+    "Cloud Engineer": {
+        "skills": [
+            "AWS",
+            "Azure",
+            "GCP",
+            "Docker",
+            "Kubernetes",
+            "Linux",
+            "Terraform",
+            "Python",
+            "Networking",
+            "Git",
+            "CI/CD"
+        ]
+    },
+
+    "Cybersecurity Analyst": {
+        "skills": [
+            "Cybersecurity",
+            "Network Security",
+            "Linux",
+            "Python",
+            "Ethical Hacking",
+            "Penetration Testing",
+            "SIEM",
+            "Firewalls",
+            "Cryptography",
+            "Risk Assessment"
+        ]
+    }
+}

@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+env/
+
+# Secrets and environment settings
+.env
+.env.*
+!.env.example
+
+# All database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Uploaded resumes and private files
+uploads/*
+!uploads/.gitkeep
+
+# Logs and temporary files
+*.log
+.DS_Store
+Thumbs.db
+
+# Test and editor caches
+.pytest_cache/
+.coverage
+.vscode/
